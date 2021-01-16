@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springblade</groupId>
         <artifactId>blade-ops</artifactId>
-        <version>2.1.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -29,15 +29,9 @@
             <version>${blade.project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybatis.plus.version}</version>
-        </dependency>
-        <!--Velocity-->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
+            <groupId>org.springblade</groupId>
+            <artifactId>blade-core-develop</artifactId>
+            <version>${blade.tool.version}</version>
         </dependency>
         <!--Swagger-->
         <dependency>
@@ -72,6 +66,26 @@
                 <configuration>
                     <skipDockerBuild>true</skipDockerBuild>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <copy overwrite="true"
+                                      tofile="${session.executionRootDirectory}/target/${artifactId}.jar"
+                                      file="${project.build.directory}/${artifactId}.jar" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -15,7 +15,11 @@
  */
 package org.springblade.system.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,15 +40,28 @@ public class Tenant extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 租户编号
+	 * 主键id
 	 */
-	@ApiModelProperty(value = "租户编号")
-	private String tenantCode;
+	@ApiModelProperty(value = "主键")
+	@TableId(value = "id", type = IdType.ASSIGN_ID)
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
+
+	/**
+	 * 租户ID
+	 */
+	@ApiModelProperty(value = "租户ID")
+	private String tenantId;
 	/**
 	 * 租户名称
 	 */
 	@ApiModelProperty(value = "租户名称")
 	private String tenantName;
+	/**
+	 * 域名地址
+	 */
+	@ApiModelProperty(value = "域名地址")
+	private String domain;
 	/**
 	 * 联系人
 	 */

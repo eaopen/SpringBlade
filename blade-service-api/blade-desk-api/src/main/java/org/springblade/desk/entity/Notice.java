@@ -15,7 +15,11 @@
  */
 package org.springblade.desk.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +38,14 @@ import java.util.Date;
 public class Notice extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 主键id
+	 */
+	@ApiModelProperty(value = "主键")
+	@TableId(value = "id", type = IdType.ASSIGN_ID)
+	@JsonSerialize(using = ToStringSerializer.class)
+	private Long id;
 
 	/**
 	 * 标题

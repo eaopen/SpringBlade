@@ -8,26 +8,6 @@ package org.springblade.common.constant;
 public interface CommonConstant {
 
 	/**
-	 * nacos dev 地址
-	 */
-	String NACOS_DEV_ADDR = "127.0.0.1:8848";
-
-	/**
-	 * nacos prod 地址
-	 */
-	String NACOS_PROD_ADDR = "192.168.186.129:8848";
-
-	/**
-	 * sentinel dev 地址
-	 */
-	String SENTINEL_DEV_ADDR = "127.0.0.1:8858";
-
-	/**
-	 * sentinel prod 地址
-	 */
-	String SENTINEL_PROD_ADDR = "192.168.186.129:8858";
-
-	/**
 	 * sword 系统名
 	 */
 	String SWORD_NAME = "sword";
@@ -40,7 +20,7 @@ public interface CommonConstant {
 	/**
 	 * 顶级父节点id
 	 */
-	Integer TOP_PARENT_ID = 0;
+	Long TOP_PARENT_ID = 0L;
 
 	/**
 	 * 顶级父节点名称

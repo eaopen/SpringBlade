@@ -8,7 +8,7 @@
     <parent>
         <artifactId>SpringBlade</artifactId>
         <groupId>org.springblade</groupId>
-        <version>2.1.0</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>blade-auth</artifactId>
@@ -40,6 +40,11 @@
         </dependency>
         <dependency>
             <groupId>org.springblade</groupId>
+            <artifactId>blade-core-social</artifactId>
+            <version>${blade.tool.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springblade</groupId>
             <artifactId>blade-user-api</artifactId>
             <version>${blade.project.version}</version>
         </dependency>
@@ -47,6 +52,18 @@
             <groupId>org.springblade</groupId>
             <artifactId>blade-core-swagger</artifactId>
             <version>${blade.tool.version}</version>
+        </dependency>
+        <!-- Captcha -->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>${captcha.version}</version>
+        </dependency>
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -71,6 +88,26 @@
                     <serverId>${docker.registry.url}</serverId>
                     <pushImage>true</pushImage>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!--suppress UnresolvedMavenProperty -->
+                                <copy overwrite="true"
+                                      tofile="${session.executionRootDirectory}/target/${artifactId}.jar"
+                                      file="${project.build.directory}/${artifactId}.jar" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

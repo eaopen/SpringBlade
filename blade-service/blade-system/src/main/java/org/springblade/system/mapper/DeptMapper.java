@@ -41,9 +41,17 @@ public interface DeptMapper extends BaseMapper<Dept> {
 	/**
 	 * 获取树形节点
 	 *
-	 * @param tenantCode
+	 * @param tenantId
 	 * @return
 	 */
-	List<DeptVO> tree(String tenantCode);
+	List<DeptVO> tree(String tenantId);
+
+	/**
+	 * 获取部门名
+	 *
+	 * @param ids
+	 * @return
+	 */
+	List<String> getDeptNames(Long[] ids);
 
 }

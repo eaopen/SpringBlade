@@ -19,7 +19,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springblade.core.secure.utils.SecureUtil;
+import org.springblade.core.tool.constant.RoleConstant;
 import org.springblade.core.tool.node.ForestNodeMerger;
+import org.springblade.core.tool.utils.CollectionUtil;
+import org.springblade.core.tool.utils.Func;
 import org.springblade.system.entity.Role;
 import org.springblade.system.entity.RoleMenu;
 import org.springblade.system.mapper.RoleMapper;
@@ -32,6 +36,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 服务实现类
@@ -51,12 +56,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 	}
 
 	@Override
-	public List<RoleVO> tree(String tenantCode) {
-		return ForestNodeMerger.merge(baseMapper.tree(tenantCode));
+	public List<RoleVO> tree(String tenantId) {
+		String userRole = SecureUtil.getUserRole();
+		String excludeRole = null;
+		if (!CollectionUtil.contains(Func.toStrArray(userRole), RoleConstant.ADMIN)) {
+			excludeRole = RoleConstant.ADMIN;
+		}
+		return ForestNodeMerger.merge(baseMapper.tree(tenantId, excludeRole));
 	}
 
 	@Override
-	public boolean grant(@NotEmpty List<Integer> roleIds, @NotEmpty List<Integer> menuIds) {
+	public boolean grant(@NotEmpty List<Long> roleIds, @NotEmpty List<Long> menuIds) {
 		// 删除角色配置的菜单集合
 		roleMenuService.remove(Wrappers.<RoleMenu>update().lambda().in(RoleMenu::getRoleId, roleIds));
 		// 组装配置
@@ -69,6 +79,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 		}));
 		// 新增配置
 		return roleMenuService.saveBatch(roleMenus);
+	}
+
+	@Override
+	public String getRoleIds(String tenantId, String roleNames) {
+		List<Role> roleList = baseMapper.selectList(Wrappers.<Role>query().lambda().eq(Role::getTenantId, tenantId).in(Role::getRoleName, Func.toStrList(roleNames)));
+		if (roleList != null && roleList.size() > 0) {
+			return roleList.stream().map(role -> Func.toStr(role.getId())).distinct().collect(Collectors.joining(","));
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> getRoleNames(String roleIds) {
+		return baseMapper.getRoleNames(Func.toLongArray(roleIds));
 	}
 
 }

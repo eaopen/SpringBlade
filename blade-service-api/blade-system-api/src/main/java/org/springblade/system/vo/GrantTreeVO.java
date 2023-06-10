@@ -13,32 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springblade.gateway.props;
+package org.springblade.system.vo;
 
 import lombok.Data;
-import org.springblade.core.launch.constant.AppConstant;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * Swagger聚合文档属性
+ * GrantTreeVO
  *
  * @author Chill
  */
 @Data
-public class RouteResource {
+public class GrantTreeVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 文档名
-	 */
-	private String name;
+	private List<MenuVO> menu;
 
-	/**
-	 * 文档所在服务地址
-	 */
-	private String location;
-
-	/**
-	 * 文档版本
-	 */
-	private String version = AppConstant.APPLICATION_VERSION;
+	private List<MenuVO> dataScope;
 
 }

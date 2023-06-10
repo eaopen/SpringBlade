@@ -15,12 +15,12 @@
  */
 package org.springblade.gateway.filter;
 
+import com.alibaba.nacos.common.utils.StringUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springblade.gateway.props.AuthProperties;
 import org.springblade.gateway.provider.AuthProvider;
 import org.springblade.gateway.provider.ResponseProvider;
@@ -32,6 +32,7 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,8 +48,9 @@ import java.nio.charset.StandardCharsets;
 @Component
 @AllArgsConstructor
 public class AuthFilter implements GlobalFilter, Ordered {
-	private AuthProperties authProperties;
-	private ObjectMapper objectMapper;
+	private final AuthProperties authProperties;
+	private final ObjectMapper objectMapper;
+	private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -59,7 +61,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 		ServerHttpResponse resp = exchange.getResponse();
 		String headerToken = exchange.getRequest().getHeaders().getFirst(AuthProvider.AUTH_KEY);
 		String paramToken = exchange.getRequest().getQueryParams().getFirst(AuthProvider.AUTH_KEY);
-		if (StringUtils.isAllBlank(headerToken, paramToken)) {
+		if (StringUtils.isBlank(headerToken) && StringUtils.isBlank(paramToken)) {
 			return unAuth(resp, "缺失令牌,鉴权失败");
 		}
 		String auth = StringUtils.isBlank(headerToken) ? paramToken : headerToken;
@@ -72,8 +74,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
 	}
 
 	private boolean isSkip(String path) {
-		return AuthProvider.getDefaultSkipUrl().stream().map(url -> url.replace(AuthProvider.TARGET, AuthProvider.REPLACEMENT)).anyMatch(path::contains)
-			|| authProperties.getSkipUrl().stream().map(url -> url.replace(AuthProvider.TARGET, AuthProvider.REPLACEMENT)).anyMatch(path::contains);
+		return AuthProvider.getDefaultSkipUrl().stream().anyMatch(pattern -> antPathMatcher.match(pattern, path))
+			|| authProperties.getSkipUrl().stream().anyMatch(pattern -> antPathMatcher.match(pattern, path));
 	}
 
 	private Mono<Void> unAuth(ServerHttpResponse resp, String msg) {

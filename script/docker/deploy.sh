@@ -1,3 +1,4 @@
+#!/bin/bash
 
 #使用说明，用来提示输入参数
 usage() {
@@ -10,11 +11,14 @@ port(){
 	firewall-cmd --add-port=88/tcp --permanent
 	firewall-cmd --add-port=8000/tcp --permanent
 	firewall-cmd --add-port=8848/tcp --permanent
+	firewall-cmd --add-port=9848/tcp --permanent
+	firewall-cmd --add-port=9849/tcp --permanent
 	firewall-cmd --add-port=8858/tcp --permanent
 	firewall-cmd --add-port=3306/tcp --permanent
 	firewall-cmd --add-port=3379/tcp --permanent
 	firewall-cmd --add-port=7002/tcp --permanent
 	firewall-cmd --add-port=9411/tcp --permanent
+	firewall-cmd --add-port=18000/tcp --permanent
 	service firewalld restart
 }
 
@@ -29,9 +33,9 @@ mount(){
 		cp nginx/web/nginx.conf /docker/nginx/web/nginx.conf
 		cp -r nginx/web/html /docker/nginx/web/html
 	fi
-	if test ! -f "/docker/nacos/init.d/custom.properties" ;then
-		mkdir -p /docker/nacos/init.d
-		cp nacos/init.d/custom.properties /docker/nacos/init.d/custom.properties
+	if test ! -f "/docker/nacos/conf/application.properties" ;then
+		mkdir -p /docker/nacos/conf
+		cp nacos/conf/application.properties /docker/nacos/conf/application.properties
 	fi
 }
 
@@ -42,7 +46,7 @@ base(){
 
 #启动程序模块
 modules(){
-	docker-compose up -d blade-gateway1 blade-gateway2 blade-admin blade-auth1 blade-auth2 blade-user blade-desk blade-system blade-log
+	docker-compose up -d blade-gateway1 blade-gateway2 blade-admin blade-swagger blade-auth1 blade-auth2 blade-user blade-desk blade-system blade-log blade-report blade-develop
 }
 
 #关闭所有模块

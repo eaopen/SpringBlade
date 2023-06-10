@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springblade.gateway.props;
+package org.springblade.system.service.impl;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springblade.system.entity.RoleScope;
+import org.springblade.system.mapper.RoleScopeMapper;
+import org.springblade.system.service.IRoleScopeService;
+import org.springframework.stereotype.Service;
 
 /**
- * 路由配置类
+ * 服务实现类
  *
  * @author Chill
  */
-@Data
-@RefreshScope
-@ConfigurationProperties("blade.document")
-public class RouteProperties {
-
-	private final List<RouteResource> resources = new ArrayList<>();
+@Service
+public class RoleScopeServiceImpl extends ServiceImpl<RoleScopeMapper, RoleScope> implements IRoleScopeService {
 
 }

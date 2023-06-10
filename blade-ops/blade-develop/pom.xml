@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springblade</groupId>
         <artifactId>blade-ops</artifactId>
-        <version>3.0.0</version>
+        <version>3.6.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -33,23 +33,6 @@
             <artifactId>blade-core-develop</artifactId>
             <version>${blade.tool.version}</version>
         </dependency>
-        <!--Swagger-->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger</groupId>
-                    <artifactId>swagger-models</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>${swagger.models.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springblade</groupId>
             <artifactId>blade-dict-api</artifactId>
@@ -64,7 +47,19 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>${docker.plugin.version}</version>
                 <configuration>
-                    <skipDockerBuild>true</skipDockerBuild>
+                    <imageName>${docker.registry.url}/blade/${project.artifactId}:${project.version}</imageName>
+                    <dockerDirectory>${project.basedir}</dockerDirectory>
+                    <dockerHost>${docker.registry.host}</dockerHost>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                    <registryUrl>${docker.registry.url}</registryUrl>
+                    <serverId>${docker.registry.url}</serverId>
+                    <pushImage>true</pushImage>
                 </configuration>
             </plugin>
             <plugin>

@@ -15,18 +15,18 @@
  */
 package org.springblade.gateway;
 
-import org.springblade.core.launch.constant.AppConstant;
 import org.springblade.core.launch.BladeApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springblade.core.launch.constant.AppConstant;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 项目启动
  *
  * @author Chill
  */
-@EnableScheduling
-@SpringCloudApplication
+@EnableDiscoveryClient
+@SpringBootApplication
 public class GateWayApplication {
 
 	public static void main(String[] args) {
